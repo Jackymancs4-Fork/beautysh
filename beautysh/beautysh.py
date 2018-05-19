@@ -185,6 +185,13 @@ class Beautify:
                 self.write_file(path, result)
         return error
 
+    def get_version(self, file_name='beautysh/__init__.py'):
+        """Get version info from __init__."""
+        with open(file_name) as f:
+            for line in f:
+                if "__version__" in line:
+                    return eval(line.split('=')[-1])
+
     def main(self):
         """Main beautifying function."""
         error = False
@@ -200,9 +207,14 @@ class Beautify:
                                  "same path as the original.")
         parser.add_argument('--tab', '-t', action='store_true',
                             help="Sets indentation to tabs instead of spaces")
+        parser.add_argument('--version', '-v', action='store_true',
+                            help="Show version and exit")
         args = parser.parse_args()
         if (len(sys.argv) < 2):
             parser.print_help()
+            exit()
+        if(args.version):
+            print(self.get_version())
             exit()
         if(type(args.indent_size) is list):
             args.indent_size = args.indent_size[0]
